@@ -4,7 +4,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.item.Item;
+import net.minecraft.loot.LootTable;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.DyeColor;
@@ -19,7 +22,7 @@ public class RainbowSheepEntity extends SheepVariantEntity
 	}
 
 	@Override
-	public Identifier getLootTableId()
+	public RegistryKey<LootTable> getLootTableId()
 	{
 		if (this.isSheared())
 		{
@@ -27,7 +30,7 @@ public class RainbowSheepEntity extends SheepVariantEntity
 		}
 		else
 		{
-			return new Identifier("fountain", "entities/sheep/rainbow");
+			return RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("fountain", "entities/sheep/rainbow"));
 		}
 	}
 

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "micheal65536.fountain.fabric.core.itembehavior.mixins",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "server": [
     "BucketItemMixin",
     "BucketItemMixin$ItemAccessor",
@@ -18,7 +18,6 @@
     "InstantItemUseMixin$LivingEntityAccessor",
     "InteractBlockConsumeItemMixin",
     "InteractBlockConsumeItemMixin$ServerPlayerInteractionManagerAccessor",
-    "InteractionDistanceMixin",
     "ItemPickupMixin",
     "PlaceableOnWaterItemMixin",
     "UsePlayerAbilitiesMixin"

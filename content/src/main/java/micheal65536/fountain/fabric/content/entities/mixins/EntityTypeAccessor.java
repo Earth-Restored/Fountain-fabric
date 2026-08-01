@@ -4,13 +4,13 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.Identifier;
+import net.minecraft.loot.LootTable;
+import net.minecraft.registry.RegistryKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(EntityType.class)
-public interface EntityTypeAccessor<T extends Entity>
-{
+public interface EntityTypeAccessor<T extends Entity> {
 	@Accessor("factory")
 	EntityType.EntityFactory<T> getFactory();
 
@@ -18,5 +18,5 @@ public interface EntityTypeAccessor<T extends Entity>
 	ImmutableSet<Block> getCanSpawnInside();
 
 	@Accessor("lootTableId")
-	void setLootTableId(Identifier lootTableId);
+	void setLootTableId(RegistryKey<LootTable> lootTableId);
 }

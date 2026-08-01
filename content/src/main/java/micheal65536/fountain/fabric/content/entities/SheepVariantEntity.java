@@ -2,8 +2,9 @@ package micheal65536.fountain.fabric.content.entities;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.loot.LootTable;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +68,7 @@ public class SheepVariantEntity extends SheepEntity
 	}
 
 	@Override
-	public Identifier getLootTableId()
+	public RegistryKey<LootTable> getLootTableId()
 	{
 		return this.shearable ? super.getLootTableId() : this.getType().getLootTableId();
 	}

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "micheal65536.fountain.fabric.generator.blocks.mixins",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "FluidBorderMixin",
     "HeightmapAirMixin"

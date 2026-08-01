@@ -2,9 +2,11 @@ package micheal65536.fountain.fabric.content;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -27,16 +29,13 @@ import micheal65536.fountain.fabric.content.entities.RainbowSheepEntity;
 import micheal65536.fountain.fabric.content.entities.SheepVariantEntity;
 import micheal65536.fountain.fabric.content.entities.TropicalSlimeEntity;
 import micheal65536.fountain.fabric.content.entities.WoolyCowEntity;
-import micheal65536.fountain.fabric.content.entities.mixins.DefaultAttributeRegistryAccessor;
 import micheal65536.fountain.fabric.content.entities.mixins.EntityTypeAccessor;
 
-public class Main implements ModInitializer
-{
+public class Main implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("fountain-content");
 
 	@Override
-	public void onInitialize()
-	{
+	public void onInitialize() {
 		// blocks/items
 
 		Block rainbowCarpetBlock = new RainbowCarpetBlock(AbstractBlock.Settings.copy(Registries.BLOCK.get(new Identifier("white_carpet"))).mapColor(DyeColor.RED));
@@ -112,22 +111,51 @@ public class Main implements ModInitializer
 		// TODO
 	}
 
-	private <T extends MobEntity> void registerEarthMobVariant(@NotNull String baseType, @NotNull String variantType)
-	{
+	private <T extends MobEntity> void registerEarthMobVariant(@NotNull String baseType, @NotNull String variantType) {
 		this.registerEarthMobVariant(baseType, variantType, null);
 	}
 
-	private <T extends U, U extends MobEntity> void registerEarthMobVariant(@NotNull String baseType, @NotNull String variantType, @Nullable EntityType.EntityFactory<T> factory)
-	{
-		EntityType<U> entityType = (EntityType<U>) Registries.ENTITY_TYPE.get(new Identifier(baseType));
-		EntityType<T> newEntityType = new EntityType<T>(factory != null ? factory : ((EntityTypeAccessor<T>) entityType).getFactory(), entityType.getSpawnGroup(), entityType.isSaveable(), entityType.isSummonable(), entityType.isFireImmune(), entityType.isSpawnableFarFromPlayer(), ((EntityTypeAccessor<?>) entityType).getCanSpawnInside(), entityType.getDimensions(), entityType.getMaxTrackDistance(), entityType.getTrackTickInterval(), entityType.getRequiredFeatures());
-		((EntityTypeAccessor<?>) newEntityType).setLootTableId(entityType.getLootTableId());
-		SpawnEggItem spawnEggItem = ((SpawnEggItem) Registries.ITEM.get(new Identifier(baseType + "_spawn_egg")));
-		SpawnEggItem newSpawnEggItem = new SpawnEggItem(newEntityType, spawnEggItem.getColor(0), spawnEggItem.getColor(1), new Item.Settings());
+	@SuppressWarnings("unchecked")
+	private <T extends U, U extends MobEntity> void registerEarthMobVariant(@NotNull String baseType, @NotNull String variantType, @Nullable EntityType.EntityFactory<T> factory) {
+		Identifier baseId = Identifier.tryParse(baseType);
+		Identifier variantId = Identifier.tryParse(variantType);
 
-		Registry.register(Registries.ENTITY_TYPE, new Identifier(variantType), newEntityType);
-		DefaultAttributeRegistryAccessor.getMap().put(newEntityType, DefaultAttributeRegistryAccessor.getMap().get(entityType));
-		Registry.register(Registries.ITEM, new Identifier(variantType + "_spawn_egg"), newSpawnEggItem);
+		if (baseId == null || variantId == null) {
+			throw new IllegalArgumentException("Invalid identifier: " + baseType + " or " + variantType);
+		}
+
+		EntityType<U> entityType = (EntityType<U>) Registries.ENTITY_TYPE.get(baseId);
+
+		EntityType.EntityFactory<T> entityFactory = (factory != null) ? factory : ((EntityTypeAccessor<T>) entityType).getFactory();
+
+		EntityType.Builder<T> builder = EntityType.Builder.create(entityFactory, entityType.getSpawnGroup()).dimensions(entityType.getDimensions().width(), entityType.getDimensions().height()).maxTrackingRange(entityType.getMaxTrackDistance()).trackingTickInterval(entityType.getTrackTickInterval());
+
+		if (entityType.isFireImmune())
+			builder.makeFireImmune();
+		if (!entityType.isSaveable())
+			builder.disableSaving();
+		if (!entityType.isSummonable())
+			builder.disableSummon();
+		if (entityType.isSpawnableFarFromPlayer())
+			builder.spawnableFarFromPlayer();
+
+		EntityType<T> newEntityType = builder.build(variantType);
+
+		((EntityTypeAccessor<?>) newEntityType).setLootTableId(entityType.getLootTableId());
+
+		Registry.register(Registries.ENTITY_TYPE, variantId, newEntityType);
+
+		if (DefaultAttributeRegistry.hasDefinitionFor(entityType)) {
+			FabricDefaultAttributeRegistry.register(newEntityType, DefaultAttributeRegistry.get(entityType));
+		}
+
+		Identifier baseEggId = Identifier.tryParse(baseType + "_spawn_egg");
+		Identifier variantEggId = Identifier.tryParse(variantType + "_spawn_egg");
+
+		SpawnEggItem spawnEggItem = (SpawnEggItem) Registries.ITEM.get(baseEggId);
+		SpawnEggItem newSpawnEggItem = new SpawnEggItem(newEntityType, spawnEggItem.getColor(0), spawnEggItem.getColor(1), new Item.Settings());
+		Registry.register(Registries.ITEM, variantEggId, newSpawnEggItem);
+
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> entries.add(newSpawnEggItem));
 	}
 }

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "micheal65536.fountain.fabric.content.entities.mixins",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "DefaultAttributeRegistryAccessor",
     "EntityTypeAccessor",

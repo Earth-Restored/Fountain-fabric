@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -21,52 +22,52 @@ import micheal65536.fountain.fabric.core.piston.BedrockCompatiblePistonBlockEnti
 @Mixin(PistonBlockEntity.class)
 public class PistonBlockEntityMixin implements BedrockCompatiblePistonBlockEntity
 {
-	private BlockPos basePos = null;
+    private BlockPos basePos = null;
 
-	public Packet<ClientPlayPacketListener> toUpdatePacket()
-	{
-		return BlockEntityUpdateS2CPacket.create((PistonBlockEntity) (Object) this);
-	}
+    public Packet<ClientPlayPacketListener> toUpdatePacket()
+    {
+        return BlockEntityUpdateS2CPacket.create((PistonBlockEntity) (Object) this);
+    }
 
-	@Override
-	public void setBasePos(BlockPos basePos)
-	{
-		this.basePos = basePos;
-	}
+    @Override
+    public void setBasePos(BlockPos basePos)
+    {
+        this.basePos = basePos;
+    }
 
-	@Inject(method = "readNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At(value = "TAIL"))
-	private void readNbt(NbtCompound nbtCompound, CallbackInfo callbackInfo)
-	{
-		if (nbtCompound.contains("basePos"))
-		{
-			NbtCompound basePosNbtCompound = nbtCompound.getCompound("basePos");
-			this.basePos = new BlockPos(basePosNbtCompound.getInt("x"), basePosNbtCompound.getInt("y"), basePosNbtCompound.getInt("z"));
-		}
-		else
-		{
-			this.basePos = null;
-		}
-	}
+    @Inject(method = "readNbt", at = @At(value = "TAIL"))
+    private void readNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo callbackInfo)
+    {
+        if (nbtCompound.contains("basePos"))
+        {
+            NbtCompound basePosNbtCompound = nbtCompound.getCompound("basePos");
+            this.basePos = new BlockPos(basePosNbtCompound.getInt("x"), basePosNbtCompound.getInt("y"), basePosNbtCompound.getInt("z"));
+        }
+        else
+        {
+            this.basePos = null;
+        }
+    }
 
-	@Inject(method = "writeNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At(value = "TAIL"))
-	private void writeNbt(NbtCompound nbtCompound, CallbackInfo callbackInfo)
-	{
-		if (this.basePos != null)
-		{
-			NbtCompound basePosNbtCompound = new NbtCompound();
-			basePosNbtCompound.putInt("x", this.basePos.getX());
-			basePosNbtCompound.putInt("y", this.basePos.getY());
-			basePosNbtCompound.putInt("z", this.basePos.getZ());
-			nbtCompound.put("basePos", basePosNbtCompound);
-		}
+    @Inject(method = "writeNbt", at = @At(value = "TAIL"))
+    private void writeNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo callbackInfo)
+    {
+        if (this.basePos != null)
+        {
+            NbtCompound basePosNbtCompound = new NbtCompound();
+            basePosNbtCompound.putInt("x", this.basePos.getX());
+            basePosNbtCompound.putInt("y", this.basePos.getY());
+            basePosNbtCompound.putInt("z", this.basePos.getZ());
+            nbtCompound.put("basePos", basePosNbtCompound);
+        }
 
-		nbtCompound.putInt("blockStateId", Block.getRawIdFromState(((PistonBlockEntityAccessor) this).getPushedBlock()));
-	}
+        nbtCompound.putInt("blockStateId", Block.getRawIdFromState(((PistonBlockEntityAccessor) this).getPushedBlock()));
+    }
 
-	@Mixin(PistonBlockEntity.class)
-	public interface PistonBlockEntityAccessor
-	{
-		@Accessor("pushedBlock")
-		BlockState getPushedBlock();
-	}
+    @Mixin(PistonBlockEntity.class)
+    public interface PistonBlockEntityAccessor
+    {
+        @Accessor("pushedBlock")
+        BlockState getPushedBlock();
+    }
 }

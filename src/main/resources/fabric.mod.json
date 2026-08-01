@@ -5,7 +5,7 @@
   "name": "Fountain",
   "description": "Fabric mod component of Fountain",
   "authors": [
-    "micheal65536"
+    "micheal65536", "bitcodercz"
   ],
   "environment": "*",
   "entrypoints": {
@@ -13,5 +13,9 @@
   "mixins": [
   ],
   "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.20.5",
+    "java": ">=21",
+    "fabric-api": "*"
   }
 }
