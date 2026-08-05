@@ -40,8 +40,8 @@ public class InventorySync {
 				new Identifier("fountain", "inventory_sync_response"));
 
 		public static final PacketCodec<RegistryByteBuf, InventorySyncResponsePayload> CODEC = PacketCodec.tuple(
-				ItemStack.PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::itemStacks,
-				ItemStack.PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::hotbarStacks,
+				ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::itemStacks,
+				ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::hotbarStacks,
 				InventorySyncResponsePayload::new);
 
 		@Override
@@ -56,7 +56,7 @@ public class InventorySync {
 
 		public static final PacketCodec<RegistryByteBuf, SetHotbarRequestPayload> CODEC = PacketCodec.tuple(
 				PacketCodecs.BOOL, SetHotbarRequestPayload::initial,
-				ItemStack.PACKET_CODEC.collect(PacketCodecs.toList()), SetHotbarRequestPayload::hotbarStacks,
+				ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), SetHotbarRequestPayload::hotbarStacks,
 				SetHotbarRequestPayload::new);
 
 		@Override
