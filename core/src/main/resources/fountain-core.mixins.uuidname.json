@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "server": [
     "LoginHelloC2SPacketMixin",
+    "PacketCodecsMixin",
     "PlayerListS2CPacketActionMixin",
     "StringHelperMixin"
   ],
