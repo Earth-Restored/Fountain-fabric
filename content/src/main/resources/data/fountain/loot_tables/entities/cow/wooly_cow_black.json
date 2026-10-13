@@ -15,7 +15,7 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "name": "minecraft:entities/cow"
+          "value": "minecraft:entities/cow"
         }
       ],
       "rolls": 1.0,

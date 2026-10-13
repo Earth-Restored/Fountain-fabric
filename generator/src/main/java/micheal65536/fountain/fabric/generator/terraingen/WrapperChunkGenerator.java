@@ -81,6 +81,10 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 				buildplateSize.undergroundHeight);
 	}
 
+	public WrapperChunkGenerator(@NotNull ChunkGenerator chunkGenerator, int size, int groundLevel, int undergroundHeight) {
+		this(chunkGenerator, new BuildplateSize(size, Optional.of(groundLevel), undergroundHeight));
+	}
+
 	@Override
 	protected MapCodec<? extends ChunkGenerator> getCodec() {
 		return CODEC;
