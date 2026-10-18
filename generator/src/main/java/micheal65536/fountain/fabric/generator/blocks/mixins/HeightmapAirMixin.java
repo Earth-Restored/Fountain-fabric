@@ -9,17 +9,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import micheal65536.fountain.fabric.generator.blocks.NonReplaceableAirBlock;
 
 @Mixin(Heightmap.class)
-public class HeightmapAirMixin
-{
+public class HeightmapAirMixin {
 	@Redirect(method = "method_16682(Lnet/minecraft/block/BlockState;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z"))
-	private static boolean isAir(BlockState blockState)
-	{
-		if (blockState.getBlock() instanceof NonReplaceableAirBlock)
-		{
+	private static boolean isAir(BlockState blockState) {
+		if (blockState.getBlock() instanceof NonReplaceableAirBlock) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return blockState.isAir();
 		}
 	}

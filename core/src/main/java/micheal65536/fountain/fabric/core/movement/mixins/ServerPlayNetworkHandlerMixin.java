@@ -15,20 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import micheal65536.fountain.fabric.core.earthmode.EarthModePlayer;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin
-{
+public class ServerPlayNetworkHandlerMixin {
 	// allows Earth players to move freely (otherwise they will still get rejected for moving too quickly or going inside blocks even though they're allowed to fly)
 	@Inject(method = "onPlayerMove(Lnet/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket;)V", at = @At(value = "HEAD"), cancellable = true)
-	private void onPlayerMove(PlayerMoveC2SPacket playerMoveC2SPacket, CallbackInfo callbackInfo)
-	{
+	private void onPlayerMove(PlayerMoveC2SPacket playerMoveC2SPacket, CallbackInfo callbackInfo) {
 		ServerPlayNetworkHandler serverPlayNetworkHandler = (ServerPlayNetworkHandler) (Object) this;
 		NetworkThreadUtils.forceMainThread(playerMoveC2SPacket, serverPlayNetworkHandler, serverPlayNetworkHandler.player.getServerWorld());
-		if (((EarthModePlayer) serverPlayNetworkHandler.player).isEarthMode())
-		{
-			if (!serverPlayNetworkHandler.player.notInAnyWorld)
-			{
-				if (((ServerPlayNetworkHandlerAccessor) serverPlayNetworkHandler).getRequestedTeleportPos() != null)
-				{
+		if (((EarthModePlayer) serverPlayNetworkHandler.player).isEarthMode()) {
+			if (!serverPlayNetworkHandler.player.notInAnyWorld) {
+				if (((ServerPlayNetworkHandlerAccessor) serverPlayNetworkHandler).getRequestedTeleportPos() != null) {
 					((ServerPlayNetworkHandlerAccessor) serverPlayNetworkHandler).setRequestedTeleportPos(null);
 				}
 
@@ -53,8 +48,7 @@ public class ServerPlayNetworkHandlerMixin
 	}
 
 	@Mixin(ServerPlayNetworkHandler.class)
-	public interface ServerPlayNetworkHandlerAccessor
-	{
+	public interface ServerPlayNetworkHandlerAccessor {
 		@Accessor("requestedTeleportPos")
 		Vec3d getRequestedTeleportPos();
 
@@ -74,14 +68,12 @@ public class ServerPlayNetworkHandlerMixin
 		void setFloating(boolean floating);
 
 		@Invoker("clampHorizontal")
-		static double clampHorizontal(double horizontal)
-		{
+		static double clampHorizontal(double horizontal) {
 			throw new AssertionError();
 		}
 
 		@Invoker("clampVertical")
-		static double clampVertical(double vertical)
-		{
+		static double clampVertical(double vertical) {
 			throw new AssertionError();
 		}
 	}

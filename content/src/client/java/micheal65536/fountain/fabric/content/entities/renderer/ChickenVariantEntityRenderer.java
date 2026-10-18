@@ -6,19 +6,16 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class ChickenVariantEntityRenderer extends ChickenEntityRenderer
-{
+public class ChickenVariantEntityRenderer extends ChickenEntityRenderer {
 	private final Identifier texture;
 
-	public ChickenVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public ChickenVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		this.texture = new Identifier(texture);
 	}
 
 	@Override
-	public Identifier getTexture(ChickenEntity chickenEntity)
-	{
+	public Identifier getTexture(ChickenEntity chickenEntity) {
 		return this.texture;
 	}
 }

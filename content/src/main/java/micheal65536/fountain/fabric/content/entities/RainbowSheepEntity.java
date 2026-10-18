@@ -14,45 +14,32 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-public class RainbowSheepEntity extends SheepVariantEntity
-{
-	public RainbowSheepEntity(EntityType<? extends SheepEntity> entityType, World world)
-	{
+public class RainbowSheepEntity extends SheepVariantEntity {
+	public RainbowSheepEntity(EntityType<? extends SheepEntity> entityType, World world) {
 		super(entityType, world, true, DyeColor.WHITE);
 	}
 
 	@Override
-	public RegistryKey<LootTable> getLootTableId()
-	{
-		if (this.isSheared())
-		{
+	public RegistryKey<LootTable> getLootTableId() {
+		if (this.isSheared()) {
 			return super.getLootTableId();
-		}
-		else
-		{
+		} else {
 			return RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("fountain", "entities/sheep/rainbow"));
 		}
 	}
 
 	@Override
-	public void sheared(SoundCategory shearedSoundCategory)
-	{
+	public void sheared(SoundCategory shearedSoundCategory) {
 		this.getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
 
 		this.setSheared(true);
 
 		Item rainbowWool = Registries.ITEM.get(new Identifier("fountain", "rainbow_wool"));
 		int count = this.random.nextInt(3) + 1;
-		for (int i = 0; i < count; i++)
-		{
+		for (int i = 0; i < count; i++) {
 			ItemEntity itemEntity = this.dropItem(rainbowWool, 1);
-			if (itemEntity != null)
-			{
-				itemEntity.setVelocity(itemEntity.getVelocity().add(
-						(this.random.nextFloat() - this.random.nextFloat()) * 0.1f,
-						this.random.nextFloat() * 0.05f,
-						(this.random.nextFloat() - this.random.nextFloat()) * 0.1f
-				));
+			if (itemEntity != null) {
+				itemEntity.setVelocity(itemEntity.getVelocity().add((this.random.nextFloat() - this.random.nextFloat()) * 0.1f, this.random.nextFloat() * 0.05f, (this.random.nextFloat() - this.random.nextFloat()) * 0.1f));
 			}
 		}
 	}

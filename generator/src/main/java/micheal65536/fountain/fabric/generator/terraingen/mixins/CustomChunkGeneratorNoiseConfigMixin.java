@@ -26,17 +26,13 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @Mixin(ThreadedAnvilChunkStorage.class)
-public class CustomChunkGeneratorNoiseConfigMixin
-{
-	@Shadow
-	@Mutable
+public class CustomChunkGeneratorNoiseConfigMixin {
+	@Shadow @Mutable
 	private NoiseConfig noiseConfig;
 
 	@Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ThreadedAnvilChunkStorage;noiseConfig:Lnet/minecraft/world/gen/noise/NoiseConfig;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
-	private void overrideNoiseConfig(ServerWorld serverWorld, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ThreadExecutor<Runnable> threadExecutor, ChunkProvider chunkProvider, ChunkGenerator chunkGenerator, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> supplier, int i, boolean b, CallbackInfo callbackInfo)
-	{
-		if (chunkGenerator instanceof NoiseConfigChunkGenerator)
-		{
+	private void overrideNoiseConfig(ServerWorld serverWorld, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ThreadExecutor<Runnable> threadExecutor, ChunkProvider chunkProvider, ChunkGenerator chunkGenerator, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> supplier, int i, boolean b, CallbackInfo callbackInfo) {
+		if (chunkGenerator instanceof NoiseConfigChunkGenerator) {
 			NoiseConfig noiseConfig = ((NoiseConfigChunkGenerator) chunkGenerator).getNoiseConfig(serverWorld.getRegistryManager(), serverWorld.getSeed());
 			this.noiseConfig = noiseConfig;
 		}

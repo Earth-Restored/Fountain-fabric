@@ -10,11 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // make vanilla/non-fixed-color sheep always spawn as white
 @Mixin(SheepEntity.class)
-public class SheepDefaultColorMixin
-{
+public class SheepDefaultColorMixin {
 	@Inject(method = "generateDefaultColor(Lnet/minecraft/util/math/random/Random;)Lnet/minecraft/util/DyeColor;", at = @At(value = "HEAD"), cancellable = true)
-	private static void generateDefaultColor(Random random, CallbackInfoReturnable<DyeColor> callbackInfo)
-	{
+	private static void generateDefaultColor(Random random, CallbackInfoReturnable<DyeColor> callbackInfo) {
 		callbackInfo.setReturnValue(DyeColor.WHITE);
 		callbackInfo.cancel();
 	}

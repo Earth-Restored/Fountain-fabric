@@ -19,7 +19,7 @@ public class TropicalSlimeEntity extends SlimeEntity {
 	}
 
 	// TODO: implement behavior - tropical slime is supposed to be passive until attacked
-	
+
 	@Override
 	protected RegistryKey<LootTable> getLootTableId() {
 		return RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("fountain", "entities/slime/tropical_slime"));

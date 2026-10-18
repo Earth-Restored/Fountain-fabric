@@ -9,12 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import micheal65536.fountain.fabric.content.entities.model.PigVariant2EntityModel;
 
-public class PigVariant2EntityRenderer extends PigEntityRenderer
-{
+public class PigVariant2EntityRenderer extends PigEntityRenderer {
 	private final Identifier texture;
 
-	public PigVariant2EntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public PigVariant2EntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		this.model = new PigEntityModel<>(context.getPart(PigVariant2EntityModel.ENTITY_MODEL_LAYER));
 
@@ -22,8 +20,7 @@ public class PigVariant2EntityRenderer extends PigEntityRenderer
 	}
 
 	@Override
-	public Identifier getTexture(PigEntity pigEntity)
-	{
+	public Identifier getTexture(PigEntity pigEntity) {
 		return this.texture;
 	}
 }

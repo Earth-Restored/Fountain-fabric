@@ -6,19 +6,16 @@ import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class SlimeVariantEntityRenderer extends SlimeEntityRenderer
-{
+public class SlimeVariantEntityRenderer extends SlimeEntityRenderer {
 	private final Identifier texture;
 
-	public SlimeVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public SlimeVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		this.texture = new Identifier(texture);
 	}
 
 	@Override
-	public Identifier getTexture(SlimeEntity slimeEntity)
-	{
+	public Identifier getTexture(SlimeEntity slimeEntity) {
 		return this.texture;
 	}
 }

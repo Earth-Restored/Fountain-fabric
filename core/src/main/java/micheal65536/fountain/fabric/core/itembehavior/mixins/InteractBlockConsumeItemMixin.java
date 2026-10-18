@@ -11,24 +11,18 @@ import micheal65536.fountain.fabric.core.earthmode.EarthModePlayer;
 
 // consumes the item when an item is used on a block by Earth players in creative mode the same as in survival mode
 @Mixin(ServerPlayerInteractionManager.class)
-public class InteractBlockConsumeItemMixin
-{
+public class InteractBlockConsumeItemMixin {
 	@Redirect(method = "interactBlock(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerInteractionManager;isCreative()Z"))
-	private boolean isCreative(ServerPlayerInteractionManager serverPlayerInteractionManager)
-	{
-		if (((EarthModePlayer) ((ServerPlayerInteractionManagerAccessor) serverPlayerInteractionManager).getPlayer()).isEarthMode())
-		{
+	private boolean isCreative(ServerPlayerInteractionManager serverPlayerInteractionManager) {
+		if (((EarthModePlayer) ((ServerPlayerInteractionManagerAccessor) serverPlayerInteractionManager).getPlayer()).isEarthMode()) {
 			return false;
-		}
-		else
-		{
+		} else {
 			return serverPlayerInteractionManager.isCreative();
 		}
 	}
 
 	@Mixin(ServerPlayerInteractionManager.class)
-	public interface ServerPlayerInteractionManagerAccessor
-	{
+	public interface ServerPlayerInteractionManagerAccessor {
 		@Accessor("player")
 		ServerPlayerEntity getPlayer();
 	}

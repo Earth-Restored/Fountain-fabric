@@ -8,19 +8,16 @@ import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class PigVariantEntityRenderer extends PigEntityRenderer
-{
+public class PigVariantEntityRenderer extends PigEntityRenderer {
 	private final Identifier texture;
 
-	public PigVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public PigVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		this.texture = new Identifier(texture);
 	}
 
 	@Override
-	public Identifier getTexture(PigEntity pigEntity)
-	{
+	public Identifier getTexture(PigEntity pigEntity) {
 		return this.texture;
 	}
 }

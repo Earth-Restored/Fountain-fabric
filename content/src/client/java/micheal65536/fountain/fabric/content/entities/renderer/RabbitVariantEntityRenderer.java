@@ -6,19 +6,16 @@ import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RabbitVariantEntityRenderer extends RabbitEntityRenderer
-{
+public class RabbitVariantEntityRenderer extends RabbitEntityRenderer {
 	private final Identifier texture;
 
-	public RabbitVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public RabbitVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		this.texture = new Identifier(texture);
 	}
 
 	@Override
-	public Identifier getTexture(RabbitEntity rabbitEntity)
-	{
+	public Identifier getTexture(RabbitEntity rabbitEntity) {
 		return this.texture;
 	}
 }

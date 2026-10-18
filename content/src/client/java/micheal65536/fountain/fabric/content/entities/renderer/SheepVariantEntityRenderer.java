@@ -10,19 +10,16 @@ import org.jetbrains.annotations.NotNull;
 
 import micheal65536.fountain.fabric.content.entities.model.SheepVariantEntityModel;
 
-public class SheepVariantEntityRenderer extends SheepEntityRenderer
-{
+public class SheepVariantEntityRenderer extends SheepEntityRenderer {
 	private final Identifier texture;
 
-	public SheepVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public SheepVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 
 		this.model = new SheepVariantEntityModel<>(context.getPart(SheepVariantEntityModel.ENTITY_MODEL_LAYER));
 
 		FeatureRenderer<?, ?> featureRenderer = this.features.remove(this.features.size() - 1);
-		if (!(featureRenderer instanceof SheepWoolFeatureRenderer))
-		{
+		if (!(featureRenderer instanceof SheepWoolFeatureRenderer)) {
 			throw new AssertionError();
 		}
 		this.addFeature(new SheepVariantWoolFeatureRenderer(this, context.getModelLoader()));
@@ -31,8 +28,7 @@ public class SheepVariantEntityRenderer extends SheepEntityRenderer
 	}
 
 	@Override
-	public Identifier getTexture(SheepEntity sheepEntity)
-	{
+	public Identifier getTexture(SheepEntity sheepEntity) {
 		return this.texture;
 	}
 }

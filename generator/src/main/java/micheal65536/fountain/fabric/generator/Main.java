@@ -20,13 +20,11 @@ import micheal65536.fountain.fabric.generator.blocks.SolidAirBlock;
 import micheal65536.fountain.fabric.generator.terraingen.EmptyChunkGenerator;
 import micheal65536.fountain.fabric.generator.terraingen.WrapperChunkGenerator;
 
-public class Main implements ModInitializer
-{
+public class Main implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("fountain-generator");
 
     @Override
-    public void onInitialize()
-    {
+    public void onInitialize() {
         // blocks
 
         Block invisibleConstraintBlock = new EarthConstraintBlock();
@@ -51,19 +49,13 @@ public class Main implements ModInitializer
         Registry.register(Registries.BLOCK, Identifier.of("fountain", "non_replaceable_air"), nonReplaceableAirBlock);
         Registry.register(Registries.ITEM, Identifier.of("fountain", "non_replaceable_air"), nonReplaceableAirBlockItem);
 
-        Registry.register(Registries.ITEM_GROUP, Identifier.of("fountain", "fountain"), FabricItemGroup.builder()
-                .displayName(Text.literal("fountain-generator"))
-                .icon(() -> new ItemStack(invisibleConstraintBlockItem))
-                .entries((context, entries) ->
-                {
-                    entries.add(invisibleConstraintBlockItem);
-                    entries.add(blendConstraintBlockItem);
-                    entries.add(borderConstraintBlockItem);
-                    entries.add(solidAirBlockItem);
-                    entries.add(nonReplaceableAirBlockItem);
-                })
-                .build()
-        );
+        Registry.register(Registries.ITEM_GROUP, Identifier.of("fountain", "fountain"), FabricItemGroup.builder().displayName(Text.literal("fountain-generator")).icon(() -> new ItemStack(invisibleConstraintBlockItem)).entries((context, entries) -> {
+            entries.add(invisibleConstraintBlockItem);
+            entries.add(blendConstraintBlockItem);
+            entries.add(borderConstraintBlockItem);
+            entries.add(solidAirBlockItem);
+            entries.add(nonReplaceableAirBlockItem);
+        }).build());
 
         // chunk generators
 

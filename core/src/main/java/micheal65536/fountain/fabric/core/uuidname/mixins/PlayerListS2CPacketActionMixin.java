@@ -8,10 +8,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(PlayerListS2CPacket.Action.class)
 public class PlayerListS2CPacketActionMixin {
 
-    @ModifyConstant(
-        method = "*",
-        constant = @Constant(intValue = 16)
-    )
+    @ModifyConstant(method = "*", constant = @Constant(intValue = 16))
     private static int increaseMaxNameLength(int original) {
         return 36;
     }

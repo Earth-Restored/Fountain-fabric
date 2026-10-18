@@ -24,11 +24,9 @@ import micheal65536.fountain.fabric.content.entities.renderer.RabbitVariantEntit
 import micheal65536.fountain.fabric.content.entities.renderer.SheepVariantEntityRenderer;
 import micheal65536.fountain.fabric.content.entities.renderer.SlimeVariantEntityRenderer;
 
-public class ClientMain implements ClientModInitializer
-{
+public class ClientMain implements ClientModInitializer {
 	@Override
-	public void onInitializeClient()
-	{
+	public void onInitializeClient() {
 		CowVariant2EntityModel.register();
 		PigVariant2EntityModel.register();
 		SheepVariantEntityModel.register();
@@ -49,7 +47,7 @@ public class ClientMain implements ClientModInitializer
 		this.registerEarthMobVariantRenderer("genoa:pinto_cow", "cow/pinto_cow.png", CowVariant2EntityRenderer::new);
 		this.registerEarthMobVariantRenderer("genoa:sunset_cow", "cow/sunset_cow.png", CowVariant2EntityRenderer::new);
 		this.registerEarthMobVariantRenderer("genoa:umbra_cow", "cow/umbra_cow.png", CowVariant2EntityRenderer::new);
-		this.registerEarthMobVariantRenderer("genoa:wooly_cow", "cow/wooly_cow.png", CowVariant2EntityRenderer::new);    // TODO: like some time I guess we should make a proper mesh for this (and the umbra cow) but idc
+		this.registerEarthMobVariantRenderer("genoa:wooly_cow", "cow/wooly_cow.png", CowVariant2EntityRenderer::new); // TODO: like some time I guess we should make a proper mesh for this (and the umbra cow) but idc
 
 		this.registerEarthMobVariantRenderer("genoa:mottled_pig", "pig/pig_mottled.png", PigVariantEntityRenderer::new);
 		this.registerEarthMobVariantRenderer("genoa:pale_pig", "pig/pale_pig.png", PigVariantEntityRenderer::new);
@@ -68,7 +66,7 @@ public class ClientMain implements ClientModInitializer
 		this.registerEarthMobVariantRenderer("genoa:inky_sheep", "sheep/inky_sheep.png", SheepVariantEntityRenderer::new);
 		this.registerEarthMobVariantRenderer("genoa:long_nosed_sheep", "sheep/long_nosed_sheep.png", SheepVariantEntityRenderer::new);
 		this.registerEarthMobVariantRenderer("genoa:patched_sheep", "sheep/patched_sheep.png", SheepVariantEntityRenderer::new);
-		this.registerEarthMobVariantRenderer("genoa:rainbow_sheep", "sheep/rainbow_sheep.png", SheepVariantEntityRenderer::new);    // TODO: fix model
+		this.registerEarthMobVariantRenderer("genoa:rainbow_sheep", "sheep/rainbow_sheep.png", SheepVariantEntityRenderer::new); // TODO: fix model
 		this.registerEarthMobVariantRenderer("genoa:rocky_sheep", "sheep/rocky_sheep.png", SheepVariantEntityRenderer::new);
 
 		this.registerEarthMobVariantRenderer("genoa:genoa_slime", (EntityRendererFactory<SlimeEntity>) SlimeEntityRenderer::new);
@@ -77,18 +75,15 @@ public class ClientMain implements ClientModInitializer
 		this.registerEarthMobVariantRenderer("genoa:tropical_slime", "slime/tropical_slime.png", SlimeVariantEntityRenderer::new);
 	}
 
-	private void registerEarthMobVariantRenderer(@NotNull String type, @NotNull EntityRendererFactory<?> entityRendererFactory)
-	{
+	private void registerEarthMobVariantRenderer(@NotNull String type, @NotNull EntityRendererFactory<?> entityRendererFactory) {
 		EntityRendererRegistry.register(Registries.ENTITY_TYPE.get(new Identifier(type)), (EntityRendererFactory) entityRendererFactory);
 	}
 
-	private void registerEarthMobVariantRenderer(@NotNull String type, @NotNull String textureName, @NotNull VariantEntityRendererFactory<?> entityRendererFactory)
-	{
+	private void registerEarthMobVariantRenderer(@NotNull String type, @NotNull String textureName, @NotNull VariantEntityRendererFactory<?> entityRendererFactory) {
 		EntityRendererRegistry.register(Registries.ENTITY_TYPE.get(new Identifier(type)), context -> (EntityRenderer<Entity>) entityRendererFactory.getInstance(context, "fountain:textures/entity/" + textureName));
 	}
 
-	private interface VariantEntityRendererFactory<T extends EntityRenderer<?>>
-	{
+	private interface VariantEntityRendererFactory<T extends EntityRenderer<?>> {
 		T getInstance(@NotNull EntityRendererFactory.Context context, @NotNull String textureName);
 	}
 }

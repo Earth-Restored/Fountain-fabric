@@ -20,40 +20,31 @@ import micheal65536.fountain.fabric.core.piston.BedrockCompatiblePistonBlockEnti
 // provide update packet for PistonBlockEntity
 // also include piston base position and pushed block state ID in packet
 @Mixin(PistonBlockEntity.class)
-public class PistonBlockEntityMixin implements BedrockCompatiblePistonBlockEntity
-{
+public class PistonBlockEntityMixin implements BedrockCompatiblePistonBlockEntity {
     private BlockPos basePos = null;
 
-    public Packet<ClientPlayPacketListener> toUpdatePacket()
-    {
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create((PistonBlockEntity) (Object) this);
     }
 
     @Override
-    public void setBasePos(BlockPos basePos)
-    {
+    public void setBasePos(BlockPos basePos) {
         this.basePos = basePos;
     }
 
     @Inject(method = "readNbt", at = @At(value = "TAIL"))
-    private void readNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo callbackInfo)
-    {
-        if (nbtCompound.contains("basePos"))
-        {
+    private void readNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo callbackInfo) {
+        if (nbtCompound.contains("basePos")) {
             NbtCompound basePosNbtCompound = nbtCompound.getCompound("basePos");
             this.basePos = new BlockPos(basePosNbtCompound.getInt("x"), basePosNbtCompound.getInt("y"), basePosNbtCompound.getInt("z"));
-        }
-        else
-        {
+        } else {
             this.basePos = null;
         }
     }
 
     @Inject(method = "writeNbt", at = @At(value = "TAIL"))
-    private void writeNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo callbackInfo)
-    {
-        if (this.basePos != null)
-        {
+    private void writeNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo callbackInfo) {
+        if (this.basePos != null) {
             NbtCompound basePosNbtCompound = new NbtCompound();
             basePosNbtCompound.putInt("x", this.basePos.getX());
             basePosNbtCompound.putInt("y", this.basePos.getY());
@@ -65,8 +56,7 @@ public class PistonBlockEntityMixin implements BedrockCompatiblePistonBlockEntit
     }
 
     @Mixin(PistonBlockEntity.class)
-    public interface PistonBlockEntityAccessor
-    {
+    public interface PistonBlockEntityAccessor {
         @Accessor("pushedBlock")
         BlockState getPushedBlock();
     }

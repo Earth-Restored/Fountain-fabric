@@ -6,19 +6,16 @@ import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class CowVariantEntityRenderer extends CowEntityRenderer
-{
+public class CowVariantEntityRenderer extends CowEntityRenderer {
 	private final Identifier texture;
 
-	public CowVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public CowVariantEntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		this.texture = new Identifier(texture);
 	}
 
 	@Override
-	public Identifier getTexture(CowEntity cowEntity)
-	{
+	public Identifier getTexture(CowEntity cowEntity) {
 		return this.texture;
 	}
 }

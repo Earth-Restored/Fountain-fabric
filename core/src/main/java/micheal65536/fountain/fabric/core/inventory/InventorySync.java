@@ -21,12 +21,9 @@ import java.util.List;
 // TODO: it might be nicer to use a push system rather than a polling system for inventory sync, but that requires hooking all the places where items are added to the player's inventory
 public class InventorySync {
 	public record InventorySyncRequestPayload(boolean clearHotbar) implements CustomPayload {
-		public static final CustomPayload.Id<InventorySyncRequestPayload> ID = new CustomPayload.Id<>(
-				new Identifier("fountain", "inventory_sync_request"));
+		public static final CustomPayload.Id<InventorySyncRequestPayload> ID = new CustomPayload.Id<>(new Identifier("fountain", "inventory_sync_request"));
 
-		public static final PacketCodec<RegistryByteBuf, InventorySyncRequestPayload> CODEC = PacketCodec.tuple(
-				PacketCodecs.BOOL, InventorySyncRequestPayload::clearHotbar,
-				InventorySyncRequestPayload::new);
+		public static final PacketCodec<RegistryByteBuf, InventorySyncRequestPayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, InventorySyncRequestPayload::clearHotbar, InventorySyncRequestPayload::new);
 
 		@Override
 		public CustomPayload.Id<? extends CustomPayload> getId() {
@@ -34,15 +31,10 @@ public class InventorySync {
 		}
 	}
 
-	public record InventorySyncResponsePayload(List<ItemStack> itemStacks, List<ItemStack> hotbarStacks)
-			implements CustomPayload {
-		public static final CustomPayload.Id<InventorySyncResponsePayload> ID = new CustomPayload.Id<>(
-				new Identifier("fountain", "inventory_sync_response"));
+	public record InventorySyncResponsePayload(List<ItemStack> itemStacks, List<ItemStack> hotbarStacks) implements CustomPayload {
+		public static final CustomPayload.Id<InventorySyncResponsePayload> ID = new CustomPayload.Id<>(new Identifier("fountain", "inventory_sync_response"));
 
-		public static final PacketCodec<RegistryByteBuf, InventorySyncResponsePayload> CODEC = PacketCodec.tuple(
-				ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::itemStacks,
-				ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::hotbarStacks,
-				InventorySyncResponsePayload::new);
+		public static final PacketCodec<RegistryByteBuf, InventorySyncResponsePayload> CODEC = PacketCodec.tuple(ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::itemStacks, ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), InventorySyncResponsePayload::hotbarStacks, InventorySyncResponsePayload::new);
 
 		@Override
 		public CustomPayload.Id<? extends CustomPayload> getId() {
@@ -51,13 +43,9 @@ public class InventorySync {
 	}
 
 	public record SetHotbarRequestPayload(boolean initial, List<ItemStack> hotbarStacks) implements CustomPayload {
-		public static final CustomPayload.Id<SetHotbarRequestPayload> ID = new CustomPayload.Id<>(
-				new Identifier("fountain", "set_hotbar_request"));
+		public static final CustomPayload.Id<SetHotbarRequestPayload> ID = new CustomPayload.Id<>(new Identifier("fountain", "set_hotbar_request"));
 
-		public static final PacketCodec<RegistryByteBuf, SetHotbarRequestPayload> CODEC = PacketCodec.tuple(
-				PacketCodecs.BOOL, SetHotbarRequestPayload::initial,
-				ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), SetHotbarRequestPayload::hotbarStacks,
-				SetHotbarRequestPayload::new);
+		public static final PacketCodec<RegistryByteBuf, SetHotbarRequestPayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, SetHotbarRequestPayload::initial, ItemStack.OPTIONAL_PACKET_CODEC.collect(PacketCodecs.toList()), SetHotbarRequestPayload::hotbarStacks, SetHotbarRequestPayload::new);
 
 		@Override
 		public CustomPayload.Id<? extends CustomPayload> getId() {
@@ -66,12 +54,9 @@ public class InventorySync {
 	}
 
 	public record SetHotbarResponsePayload(boolean success) implements CustomPayload {
-		public static final CustomPayload.Id<SetHotbarResponsePayload> ID = new CustomPayload.Id<>(
-				new Identifier("fountain", "set_hotbar_response"));
+		public static final CustomPayload.Id<SetHotbarResponsePayload> ID = new CustomPayload.Id<>(new Identifier("fountain", "set_hotbar_response"));
 
-		public static final PacketCodec<RegistryByteBuf, SetHotbarResponsePayload> CODEC = PacketCodec.tuple(
-				PacketCodecs.BOOL, SetHotbarResponsePayload::success,
-				SetHotbarResponsePayload::new);
+		public static final PacketCodec<RegistryByteBuf, SetHotbarResponsePayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, SetHotbarResponsePayload::success, SetHotbarResponsePayload::new);
 
 		@Override
 		public CustomPayload.Id<? extends CustomPayload> getId() {
@@ -85,13 +70,11 @@ public class InventorySync {
 		PayloadTypeRegistry.playC2S().register(SetHotbarRequestPayload.ID, SetHotbarRequestPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SetHotbarResponsePayload.ID, SetHotbarResponsePayload.CODEC);
 
-		ServerPlayNetworking.registerGlobalReceiver(InventorySyncRequestPayload.ID,
-				InventorySync::handleInventorySyncRequest);
+		ServerPlayNetworking.registerGlobalReceiver(InventorySyncRequestPayload.ID, InventorySync::handleInventorySyncRequest);
 		ServerPlayNetworking.registerGlobalReceiver(SetHotbarRequestPayload.ID, InventorySync::handleSetHotbarRequest);
 	}
 
-	private static void handleInventorySyncRequest(InventorySyncRequestPayload payload,
-			ServerPlayNetworking.Context context) {
+	private static void handleInventorySyncRequest(InventorySyncRequestPayload payload, ServerPlayNetworking.Context context) {
 		var player = context.player();
 
 		if (!((EarthModePlayer) player).isEarthMode()) {

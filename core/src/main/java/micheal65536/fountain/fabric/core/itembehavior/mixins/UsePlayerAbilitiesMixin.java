@@ -18,24 +18,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 // dear Mojang, you already have PlayerAbilities.creativeMode to use for block breaking/drops/take item, please make sure to actually use it for all block breaking/drops/take item
 // this fixes your badly-written blocks and items so that they use the player abilities like all the rest of your blocks and items do, rather than the PlayerEntity.isCreative() function
 // PlayerEntity.isCreative() is supposed to be used for mob targeting and similar, not building/breaking
-@Mixin({
-		AbstractSignBlock.class,
-		BarrierBlock.class,
-		BeehiveBlock.class,
-		CakeBlock.class,
+@Mixin({ AbstractSignBlock.class, BarrierBlock.class, BeehiveBlock.class, CakeBlock.class,
 		//ChiseledBookshelfBlock.class,
-		DecoratedPotBlock.class,
-		ShulkerBoxBlock.class,
-		TntBlock.class,
-		PowderSnowBucketItem.class,
-		SwordItem.class,
-		TridentItem.class
-})
-public class UsePlayerAbilitiesMixin
-{
+		DecoratedPotBlock.class, ShulkerBoxBlock.class, TntBlock.class, PowderSnowBucketItem.class, SwordItem.class, TridentItem.class })
+public class UsePlayerAbilitiesMixin {
 	@Redirect(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isCreative()Z"))
-	private boolean isCreative(PlayerEntity playerEntity)
-	{
+	private boolean isCreative(PlayerEntity playerEntity) {
 		return playerEntity.getAbilities().creativeMode;
 	}
 }

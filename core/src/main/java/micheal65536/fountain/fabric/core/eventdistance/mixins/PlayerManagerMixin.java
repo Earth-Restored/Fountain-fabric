@@ -18,30 +18,23 @@ import java.util.List;
 
 // makes sure that distance-limited packets (e.g. sounds) are always sent to Earth players
 @Mixin(PlayerManager.class)
-public class PlayerManagerMixin
-{
+public class PlayerManagerMixin {
 	@Inject(method = "sendToAround(Lnet/minecraft/entity/player/PlayerEntity;DDDDLnet/minecraft/registry/RegistryKey;Lnet/minecraft/network/packet/Packet;)V", at = @At(value = "HEAD"), cancellable = true)
-	private void sendToAround(PlayerEntity fromPlayer, double x, double y, double z, double distance, RegistryKey<World> worldRegistryKey, Packet<?> packet, CallbackInfo callbackInfo)
-	{
-		for (ServerPlayerEntity player : ((PlayerManagerAccessor) this).getPlayers())
-		{
+	private void sendToAround(PlayerEntity fromPlayer, double x, double y, double z, double distance, RegistryKey<World> worldRegistryKey, Packet<?> packet, CallbackInfo callbackInfo) {
+		for (ServerPlayerEntity player : ((PlayerManagerAccessor) this).getPlayers()) {
 			boolean isEarthMode = ((EarthModePlayer) player).isEarthMode();
-			if (player == fromPlayer && !isEarthMode)
-			{
+			if (player == fromPlayer && !isEarthMode) {
 				continue;
 			}
-			if (player.getWorld().getRegistryKey() != worldRegistryKey)
-			{
+			if (player.getWorld().getRegistryKey() != worldRegistryKey) {
 				continue;
 			}
-			if (!isEarthMode)
-			{
+			if (!isEarthMode) {
 				double dx = x - player.getX();
 				double dy = y - player.getY();
 				double dz = z - player.getZ();
 				double dSquared = dx * dx + dy * dy + dz * dz;
-				if (dSquared >= distance * distance)
-				{
+				if (dSquared >= distance * distance) {
 					continue;
 				}
 			}
@@ -51,8 +44,7 @@ public class PlayerManagerMixin
 	}
 
 	@Mixin(PlayerManager.class)
-	public interface PlayerManagerAccessor
-	{
+	public interface PlayerManagerAccessor {
 		@Accessor("players")
 		List<ServerPlayerEntity> getPlayers();
 	}

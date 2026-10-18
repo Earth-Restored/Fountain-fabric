@@ -12,19 +12,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import micheal65536.fountain.fabric.core.earthmode.EarthModePlayer;
 
 @Mixin(ServerPlayerInteractionManager.class)
-public class ServerPlayerInteractionManagerMixin
-{
+public class ServerPlayerInteractionManagerMixin {
 	// ensure that the correct player abilities are set for Earth mode, after setGameMode has overwritten them with the game mode abilities
 	@Inject(method = "setGameMode(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V", at = @At(value = "TAIL"))
-	private void setGameMode(GameMode gameMode, GameMode previousGameMode, CallbackInfo callbackInfo)
-	{
+	private void setGameMode(GameMode gameMode, GameMode previousGameMode, CallbackInfo callbackInfo) {
 		ServerPlayerInteractionManager serverPlayerInteractionManager = (ServerPlayerInteractionManager) (Object) this;
 		((EarthModePlayer) ((ServerPlayerInteractionManagerAccessor) serverPlayerInteractionManager).getPlayer()).applyAbilitiesForEarthMode();
 	}
 
 	@Mixin(ServerPlayerInteractionManager.class)
-	public interface ServerPlayerInteractionManagerAccessor
-	{
+	public interface ServerPlayerInteractionManagerAccessor {
 		@Accessor("player")
 		ServerPlayerEntity getPlayer();
 	}

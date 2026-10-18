@@ -10,11 +10,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.Map;
 
 @Mixin(DefaultAttributeRegistry.class)
-public interface DefaultAttributeRegistryAccessor
-{
+public interface DefaultAttributeRegistryAccessor {
 	@Accessor("DEFAULT_ATTRIBUTE_REGISTRY")
-	static Map<EntityType<? extends LivingEntity>, DefaultAttributeContainer> getMap()
-	{
+	static Map<EntityType<? extends LivingEntity>, DefaultAttributeContainer> getMap() {
 		throw new AssertionError();
 	}
 }

@@ -43,20 +43,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfigChunkGenerator {
-	public static final MapCodec<WrapperChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-			ChunkGenerator.CODEC.fieldOf("inner").forGetter(chunkGenerator -> chunkGenerator.chunkGenerator),
-			RecordCodecBuilder.<BuildplateSize>create(instance1 -> instance1.group(
-					Codec.INT.optionalFieldOf("size", 32).forGetter(buildplateSize -> buildplateSize.size),
-					Codec.INT.optionalFieldOf("ground_level").forGetter(buildplateSize -> buildplateSize.groundLevel),
-					Codec.INT.optionalFieldOf("underground_height", 16)
-							.forGetter(buildplateSize -> buildplateSize.undergroundHeight))
-					.apply(instance1, instance1.stable(BuildplateSize::new)))
-					.optionalFieldOf("buildplate", new BuildplateSize(32, Optional.empty(), 16))
-					.forGetter(chunkGenerator -> new BuildplateSize(
-							chunkGenerator.earthConstraintBlocksCalculator.buildplateWidth,
-							Optional.of(chunkGenerator.earthConstraintBlocksCalculator.buildplateGroundLevel),
-							chunkGenerator.earthConstraintBlocksCalculator.buildplateUndergroundHeight)))
-			.apply(instance, instance.stable(WrapperChunkGenerator::new)));
+	public static final MapCodec<WrapperChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(ChunkGenerator.CODEC.fieldOf("inner").forGetter(chunkGenerator -> chunkGenerator.chunkGenerator), RecordCodecBuilder.<BuildplateSize>create(instance1 -> instance1.group(Codec.INT.optionalFieldOf("size", 32).forGetter(buildplateSize -> buildplateSize.size), Codec.INT.optionalFieldOf("ground_level").forGetter(buildplateSize -> buildplateSize.groundLevel), Codec.INT.optionalFieldOf("underground_height", 16).forGetter(buildplateSize -> buildplateSize.undergroundHeight)).apply(instance1, instance1.stable(BuildplateSize::new))).optionalFieldOf("buildplate", new BuildplateSize(32, Optional.empty(), 16)).forGetter(chunkGenerator -> new BuildplateSize(chunkGenerator.earthConstraintBlocksCalculator.buildplateWidth, Optional.of(chunkGenerator.earthConstraintBlocksCalculator.buildplateGroundLevel), chunkGenerator.earthConstraintBlocksCalculator.buildplateUndergroundHeight))).apply(instance, instance.stable(WrapperChunkGenerator::new)));
 
 	private static final class BuildplateSize {
 		public final int size;
@@ -76,9 +63,7 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 	private WrapperChunkGenerator(@NotNull ChunkGenerator chunkGenerator, @NotNull BuildplateSize buildplateSize) {
 		super(chunkGenerator.getBiomeSource());
 		this.chunkGenerator = chunkGenerator;
-		this.earthConstraintBlocksCalculator = new EarthConstraintBlocksCalculator(buildplateSize.size,
-				buildplateSize.size, buildplateSize.groundLevel.orElse(this.chunkGenerator.getSeaLevel()),
-				buildplateSize.undergroundHeight);
+		this.earthConstraintBlocksCalculator = new EarthConstraintBlocksCalculator(buildplateSize.size, buildplateSize.size, buildplateSize.groundLevel.orElse(this.chunkGenerator.getSeaLevel()), buildplateSize.undergroundHeight);
 	}
 
 	public WrapperChunkGenerator(@NotNull ChunkGenerator chunkGenerator, int size, int groundLevel, int undergroundHeight) {
@@ -93,24 +78,18 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 	@Override
 	public void getDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {
 		this.chunkGenerator.getDebugHudText(text, noiseConfig, pos);
-		text.add("Buildplate size: %d %d %d %d".formatted(this.earthConstraintBlocksCalculator.buildplateWidth,
-				this.earthConstraintBlocksCalculator.buildplateDepth,
-				this.earthConstraintBlocksCalculator.buildplateGroundLevel,
-				this.earthConstraintBlocksCalculator.buildplateUndergroundHeight));
+		text.add("Buildplate size: %d %d %d %d".formatted(this.earthConstraintBlocksCalculator.buildplateWidth, this.earthConstraintBlocksCalculator.buildplateDepth, this.earthConstraintBlocksCalculator.buildplateGroundLevel, this.earthConstraintBlocksCalculator.buildplateUndergroundHeight));
 	}
 
 	@Override
-	public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig,
-			StructureAccessor structureAccessor, Chunk chunk) {
-		if (this.earthConstraintBlocksCalculator.isChunkOutsideBuildplate(chunk.getPos().getStartX(),
-				chunk.getPos().getStartZ())) {
+	public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+		if (this.earthConstraintBlocksCalculator.isChunkOutsideBuildplate(chunk.getPos().getStartX(), chunk.getPos().getStartZ())) {
 			this.setEarthConstraintBlocksInChunk(chunk);
 			CompletableFuture<Chunk> future = new CompletableFuture<>();
 			future.complete(chunk);
 			return future;
 		}
-		CompletableFuture<Chunk> future = this.chunkGenerator.populateNoise(executor, blender, noiseConfig,
-				structureAccessor, chunk);
+		CompletableFuture<Chunk> future = this.chunkGenerator.populateNoise(executor, blender, noiseConfig, structureAccessor, chunk);
 		return future.thenApply(chunk1 -> {
 			this.setEarthConstraintBlocksInChunk(chunk1);
 			return chunk1;
@@ -118,8 +97,7 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 	}
 
 	@Override
-	public CompletableFuture<Chunk> populateBiomes(Executor executor, NoiseConfig noiseConfig, Blender blender,
-			StructureAccessor structureAccessor, Chunk chunk) {
+	public CompletableFuture<Chunk> populateBiomes(Executor executor, NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
 		return this.chunkGenerator.populateBiomes(executor, noiseConfig, blender, structureAccessor, chunk);
 	}
 
@@ -132,20 +110,16 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 
 	@Override
 	public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
-		if (!this.earthConstraintBlocksCalculator.isChunkOutsideBuildplate(chunk.getPos().getStartX(),
-				chunk.getPos().getStartZ())) {
+		if (!this.earthConstraintBlocksCalculator.isChunkOutsideBuildplate(chunk.getPos().getStartX(), chunk.getPos().getStartZ())) {
 			this.chunkGenerator.buildSurface(region, structures, noiseConfig, chunk);
 			this.setEarthConstraintBlocksInChunk(chunk);
 		}
 	}
 
 	@Override
-	public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess,
-			StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
-		if (!this.earthConstraintBlocksCalculator.isChunkOutsideBuildplate(chunk.getPos().getStartX(),
-				chunk.getPos().getStartZ())) {
-			this.chunkGenerator.carve(chunkRegion, seed, noiseConfig, biomeAccess, structureAccessor, chunk,
-					carverStep);
+	public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
+		if (!this.earthConstraintBlocksCalculator.isChunkOutsideBuildplate(chunk.getPos().getStartX(), chunk.getPos().getStartZ())) {
+			this.chunkGenerator.carve(chunkRegion, seed, noiseConfig, biomeAccess, structureAccessor, chunk, carverStep);
 			this.setEarthConstraintBlocksInChunk(chunk);
 		}
 	}
@@ -245,14 +219,12 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 	}
 
 	@Override
-	public Pool<SpawnSettings.SpawnEntry> getEntitySpawnList(RegistryEntry<Biome> biome, StructureAccessor accessor,
-			SpawnGroup group, BlockPos pos) {
+	public Pool<SpawnSettings.SpawnEntry> getEntitySpawnList(RegistryEntry<Biome> biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
 		return this.chunkGenerator.getEntitySpawnList(biome, accessor, group, pos);
 	}
 
 	@Override
-	public StructurePlacementCalculator createStructurePlacementCalculator(
-			RegistryWrapper<StructureSet> structureSetRegistry, NoiseConfig noiseConfig, long seed) {
+	public StructurePlacementCalculator createStructurePlacementCalculator(RegistryWrapper<StructureSet> structureSetRegistry, NoiseConfig noiseConfig, long seed) {
 		return this.chunkGenerator.createStructurePlacementCalculator(structureSetRegistry, noiseConfig, seed);
 	}
 
@@ -264,11 +236,9 @@ public class WrapperChunkGenerator extends ChunkGenerator implements NoiseConfig
 	@Override
 	public NoiseConfig getNoiseConfig(@NotNull DynamicRegistryManager dynamicRegistryManager, long seed) {
 		if (this.chunkGenerator instanceof NoiseChunkGenerator noiseChunkGenerator) {
-			return NoiseConfig.create(noiseChunkGenerator.getSettings().value(),
-					dynamicRegistryManager.getWrapperOrThrow(RegistryKeys.NOISE_PARAMETERS), seed);
+			return NoiseConfig.create(noiseChunkGenerator.getSettings().value(), dynamicRegistryManager.getWrapperOrThrow(RegistryKeys.NOISE_PARAMETERS), seed);
 		} else {
-			return NoiseConfig.create(ChunkGeneratorSettings.createMissingSettings(),
-					dynamicRegistryManager.getWrapperOrThrow(RegistryKeys.NOISE_PARAMETERS), seed);
+			return NoiseConfig.create(ChunkGeneratorSettings.createMissingSettings(), dynamicRegistryManager.getWrapperOrThrow(RegistryKeys.NOISE_PARAMETERS), seed);
 		}
 	}
 }

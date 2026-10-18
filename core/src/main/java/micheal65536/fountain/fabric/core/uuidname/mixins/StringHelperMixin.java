@@ -10,9 +10,7 @@ import java.util.regex.Pattern;
 
 @Mixin(StringHelper.class)
 public class StringHelperMixin {
-    private static final Pattern GUID_PATTERN = Pattern.compile(
-        "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-    );
+    private static final Pattern GUID_PATTERN = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 
     @Inject(method = "isValidPlayerName", at = @At("HEAD"), cancellable = true)
     private static void allowGuidUsernames(String name, CallbackInfoReturnable<Boolean> cir) {

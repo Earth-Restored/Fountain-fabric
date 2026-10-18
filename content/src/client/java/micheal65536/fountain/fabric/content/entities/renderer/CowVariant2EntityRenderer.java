@@ -8,12 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import micheal65536.fountain.fabric.content.entities.model.CowVariant2EntityModel;
 
-public class CowVariant2EntityRenderer extends CowEntityRenderer
-{
+public class CowVariant2EntityRenderer extends CowEntityRenderer {
 	private final Identifier texture;
 
-	public CowVariant2EntityRenderer(EntityRendererFactory.Context context, @NotNull String texture)
-	{
+	public CowVariant2EntityRenderer(EntityRendererFactory.Context context, @NotNull String texture) {
 		super(context);
 		super.model = new CowVariant2EntityModel<>(context.getPart(CowVariant2EntityModel.ENTITY_MODEL_LAYER));
 
@@ -21,8 +19,7 @@ public class CowVariant2EntityRenderer extends CowEntityRenderer
 	}
 
 	@Override
-	public Identifier getTexture(CowEntity cowEntity)
-	{
+	public Identifier getTexture(CowEntity cowEntity) {
 		return this.texture;
 	}
 }

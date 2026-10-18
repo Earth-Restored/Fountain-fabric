@@ -12,17 +12,15 @@ import micheal65536.fountain.fabric.core.inventory.InventorySync;
 import micheal65536.fountain.fabric.core.itembehavior.ItemParticlePayload;
 import micheal65536.fountain.fabric.core.mobdespawn.MobDespawnGamerule;
 
-public class Main implements DedicatedServerModInitializer
-{
+public class Main implements DedicatedServerModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("fountain-core");
 
 	@Override
-	public void onInitializeServer()
-	{
+	public void onInitializeServer() {
 		MobDespawnGamerule.register();
 		CommandRegistrationCallback.EVENT.register(EarthModeCommand.COMMAND_REGISTRATION_CALLBACK);
 		EarthModePacket.register();
-        InventorySync.register();
+		InventorySync.register();
 		PayloadTypeRegistry.playS2C().register(ItemParticlePayload.ID, ItemParticlePayload.CODEC);
 	}
 }

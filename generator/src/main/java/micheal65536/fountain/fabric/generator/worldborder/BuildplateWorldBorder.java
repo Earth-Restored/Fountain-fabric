@@ -17,21 +17,17 @@ import net.minecraft.world.chunk.ChunkStatus;
 import micheal65536.fountain.fabric.generator.Main;
 import micheal65536.fountain.fabric.generator.blocks.NonReplaceableAirBlock;
 
-public class BuildplateWorldBorder extends WorldBorder
-{
+public class BuildplateWorldBorder extends WorldBorder {
 	private final World world;
 
-	public BuildplateWorldBorder(World world)
-	{
+	public BuildplateWorldBorder(World world) {
 		this.world = world;
 	}
 
 	@Override
-	public boolean contains(BlockPos pos)
-	{
+	public boolean contains(BlockPos pos) {
 		Chunk chunk = this.world.getChunk(ChunkSectionPos.getSectionCoord(pos.getX()), ChunkSectionPos.getSectionCoord(pos.getZ()), ChunkStatus.NOISE, false);
-		if (chunk == null)
-		{
+		if (chunk == null) {
 			Main.LOGGER.warn("Chunk containing %s was not generated when checking world border".formatted(pos.toShortString()));
 			return true;
 		}
@@ -40,52 +36,45 @@ public class BuildplateWorldBorder extends WorldBorder
 	}
 
 	@Override
-	public boolean contains(ChunkPos pos)
-	{
+	public boolean contains(ChunkPos pos) {
 		// this is only used for entity spawning and is eventually followed by a contains(BlockPos) check
 		return true;
 	}
 
 	@Override
-	public boolean contains(Box box)
-	{
+	public boolean contains(Box box) {
 		BlockPos minPos = BlockPos.ofFloored(box.minX, box.minY, box.minZ);
 		BlockPos maxPos = BlockPos.ofFloored(box.maxX, box.maxY, box.maxZ);
 		return BlockPos.stream(minPos, maxPos).anyMatch(blockPos -> this.contains(blockPos));
 	}
 
 	@Override
-	public boolean contains(double x, double z)
-	{
+	public boolean contains(double x, double z) {
 		// never used
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean contains(double x, double z, double margin)
-	{
+	public boolean contains(double x, double z, double margin) {
 		// never used
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public BlockPos clamp(double x, double y, double z)
-	{
+	public BlockPos clamp(double x, double y, double z) {
 		// this is only used for dimension switching
 		// TODO: hackerdude will probably want to support that later so we should test if portals behave acceptably with this
 		return BlockPos.ofFloored(x, y, z);
 	}
 
 	@Override
-	public double getDistanceInsideBorder(Entity entity)
-	{
+	public double getDistanceInsideBorder(Entity entity) {
 		// this is only used for applying damage and warning visuals
 		return Double.MAX_VALUE;
 	}
 
 	@Override
-	public double getDistanceInsideBorder(double x, double z)
-	{
+	public double getDistanceInsideBorder(double x, double z) {
 		// this is used for determining player spawn position and applying warning visuals
 		return Double.MAX_VALUE;
 	}
@@ -101,10 +90,8 @@ public class BuildplateWorldBorder extends WorldBorder
 	}
 
 	@Override
-	public boolean canCollide(Entity entity, Box box)
-	{
-		if (this.lastCanCollideBox.get() != null)
-		{
+	public boolean canCollide(Entity entity, Box box) {
+		if (this.lastCanCollideBox.get() != null) {
 			Main.LOGGER.warn("BuildplateWorldBorder.canCollide called again with no inbetween call to asVoxelShape");
 			this.lastCanCollideBox.set(null);
 		}
@@ -113,22 +100,17 @@ public class BuildplateWorldBorder extends WorldBorder
 		BlockPos maxPos = BlockPos.ofFloored(box.maxX, box.maxY, box.maxZ);
 		boolean collides = BlockPos.stream(minPos, maxPos).anyMatch(blockPos -> !this.contains(blockPos));
 
-		if (collides)
-		{
+		if (collides) {
 			this.lastCanCollideBox.set(box);
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
 	@Override
-	public VoxelShape asVoxelShape()
-	{
-		if (this.lastCanCollideBox.get() == null)
-		{
+	public VoxelShape asVoxelShape() {
+		if (this.lastCanCollideBox.get() == null) {
 			Main.LOGGER.warn("BuildplateWorldBorder.asVoxelShape called with no preceding call to canCollide");
 			return VoxelShapes.empty();
 		}
@@ -141,157 +123,132 @@ public class BuildplateWorldBorder extends WorldBorder
 	}
 
 	@Override
-	public WorldBorderStage getStage()
-	{
+	public WorldBorderStage getStage() {
 		return WorldBorderStage.STATIONARY;
 	}
 
 	@Override
-	public double getBoundWest()
-	{
+	public double getBoundWest() {
 		// only used for rendering
 		return -29999984.0;
 	}
 
 	@Override
-	public double getBoundNorth()
-	{
+	public double getBoundNorth() {
 		// only used for rendering
 		return -29999984.0;
 	}
 
 	@Override
-	public double getBoundEast()
-	{
+	public double getBoundEast() {
 		// only used for rendering
 		return 29999984.0;
 	}
 
 	@Override
-	public double getBoundSouth()
-	{
+	public double getBoundSouth() {
 		// only used for rendering
 		return 29999984.0;
 	}
 
 	@Override
-	public double getCenterX()
-	{
+	public double getCenterX() {
 		return 0.0;
 	}
 
 	@Override
-	public double getCenterZ()
-	{
+	public double getCenterZ() {
 		return 0.0;
 	}
 
 	@Override
-	public void setCenter(double x, double z)
-	{
+	public void setCenter(double x, double z) {
 		// empty
 	}
 
 	@Override
-	public double getSize()
-	{
+	public double getSize() {
 		// only used for rendering and packet stuff
 		return 59999968.0;
 	}
 
 	@Override
-	public long getSizeLerpTime()
-	{
+	public long getSizeLerpTime() {
 		return 0;
 	}
 
 	@Override
-	public double getSizeLerpTarget()
-	{
+	public double getSizeLerpTarget() {
 		return 59999968.0;
 	}
 
 	@Override
-	public void setSize(double size)
-	{
+	public void setSize(double size) {
 		// empty
 	}
 
 	@Override
-	public void interpolateSize(double fromSize, double toSize, long time)
-	{
+	public void interpolateSize(double fromSize, double toSize, long time) {
 		// empty
 	}
 
 	@Override
-	public void setMaxRadius(int maxRadius)
-	{
+	public void setMaxRadius(int maxRadius) {
 		// empty
 	}
 
 	@Override
-	public int getMaxRadius()
-	{
+	public int getMaxRadius() {
 		return 29999984;
 	}
 
 	@Override
-	public double getSafeZone()
-	{
+	public double getSafeZone() {
 		return 0.0;
 	}
 
 	@Override
-	public void setSafeZone(double safeZone)
-	{
+	public void setSafeZone(double safeZone) {
 		// empty
 	}
 
 	@Override
-	public double getDamagePerBlock()
-	{
+	public double getDamagePerBlock() {
 		return 0.0;
 	}
 
 	@Override
-	public void setDamagePerBlock(double damagePerBlock)
-	{
+	public void setDamagePerBlock(double damagePerBlock) {
 		// empty
 	}
 
 	@Override
-	public double getShrinkingSpeed()
-	{
+	public double getShrinkingSpeed() {
 		return 0.0;
 	}
 
 	@Override
-	public int getWarningTime()
-	{
+	public int getWarningTime() {
 		return Integer.MAX_VALUE;
 	}
 
 	@Override
-	public void setWarningTime(int warningTime)
-	{
+	public void setWarningTime(int warningTime) {
 		// empty
 	}
 
 	@Override
-	public int getWarningBlocks()
-	{
+	public int getWarningBlocks() {
 		return 0;
 	}
 
 	@Override
-	public void setWarningBlocks(int warningBlocks)
-	{
+	public void setWarningBlocks(int warningBlocks) {
 		// empty
 	}
 
 	@Override
-	public void tick()
-	{
+	public void tick() {
 		// empty
 	}
 }

@@ -19,25 +19,20 @@ import micheal65536.fountain.fabric.core.earthmode.EarthModePlayer;
 
 // makes Earth players use items like food or bows instantly
 @Mixin(ServerPlayerInteractionManager.class)
-public class InstantItemUseMixin
-{
-	private static final int ITEM_USE_TIME_CAP = 1200;    // cap item usage duration to 1 minute (items like bows have high usage durations after which they are consumed instead of used in the normal way)
+public class InstantItemUseMixin {
+	private static final int ITEM_USE_TIME_CAP = 1200; // cap item usage duration to 1 minute (items like bows have high usage durations after which they are consumed instead of used in the normal way)
 
 	@Inject(method = "interactItem(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;", at = @At(value = "HEAD"), cancellable = true)
-	private void interactItem(ServerPlayerEntity player, World world, ItemStack itemStack, Hand hand, CallbackInfoReturnable<ActionResult> callbackInfo)
-	{
-		if (((EarthModePlayer) player).isEarthMode())
-		{
+	private void interactItem(ServerPlayerEntity player, World world, ItemStack itemStack, Hand hand, CallbackInfoReturnable<ActionResult> callbackInfo) {
+		if (((EarthModePlayer) player).isEarthMode()) {
 			ServerPlayerInteractionManager serverPlayerInteractionManager = (ServerPlayerInteractionManager) (Object) this;
 			callbackInfo.setReturnValue(this.interactItemEarthMode(serverPlayerInteractionManager, player, world, itemStack, hand));
 			callbackInfo.cancel();
 		}
 	}
 
-	private ActionResult interactItemEarthMode(ServerPlayerInteractionManager interactionManager, ServerPlayerEntity player, World world, ItemStack itemStack, Hand hand)
-	{
-		if (interactionManager.getGameMode() != GameMode.CREATIVE && interactionManager.getGameMode() != GameMode.SURVIVAL)
-		{
+	private ActionResult interactItemEarthMode(ServerPlayerInteractionManager interactionManager, ServerPlayerEntity player, World world, ItemStack itemStack, Hand hand) {
+		if (interactionManager.getGameMode() != GameMode.CREATIVE && interactionManager.getGameMode() != GameMode.SURVIVAL) {
 			return ActionResult.PASS;
 		}
 
@@ -45,14 +40,11 @@ public class InstantItemUseMixin
 		ItemStack newItemStack = typedActionResult.getValue();
 		ActionResult actionResult = typedActionResult.getResult();
 
-		if (actionResult != ActionResult.FAIL)
-		{
+		if (actionResult != ActionResult.FAIL) {
 			player.setStackInHand(hand, newItemStack.isEmpty() ? ItemStack.EMPTY : newItemStack);
 
-			if (itemStack.getMaxUseTime() > 0)
-			{
-				while (player.isUsingItem() && player.getItemUseTimeLeft() > 0 && player.getItemUseTime() < ITEM_USE_TIME_CAP)
-				{
+			if (itemStack.getMaxUseTime() > 0) {
+				while (player.isUsingItem() && player.getItemUseTimeLeft() > 0 && player.getItemUseTime() < ITEM_USE_TIME_CAP) {
 					((LivingEntityAccessor) player).callTickActiveItemStack();
 				}
 				player.stopUsingItem();
@@ -63,8 +55,7 @@ public class InstantItemUseMixin
 	}
 
 	@Mixin(LivingEntity.class)
-	public interface LivingEntityAccessor
-	{
+	public interface LivingEntityAccessor {
 		@Invoker("tickActiveItemStack")
 		void callTickActiveItemStack();
 	}

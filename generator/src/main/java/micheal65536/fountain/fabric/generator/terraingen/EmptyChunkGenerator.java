@@ -39,15 +39,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 public class EmptyChunkGenerator extends ChunkGenerator {
-	public static final MapCodec<EmptyChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-			Codec.INT.optionalFieldOf("size", 32)
-					.forGetter(chunkGenerator -> chunkGenerator.earthConstraintBlocksCalculator.buildplateWidth),
-			Codec.INT.optionalFieldOf("ground_level", 34)
-					.forGetter(chunkGenerator -> chunkGenerator.earthConstraintBlocksCalculator.buildplateGroundLevel),
-			Codec.INT.optionalFieldOf("underground_height", 16).forGetter(
-					chunkGenerator -> chunkGenerator.earthConstraintBlocksCalculator.buildplateUndergroundHeight),
-			Biome.REGISTRY_CODEC.fieldOf("biome").forGetter(chunkGenerator -> chunkGenerator.biome))
-			.apply(instance, instance.stable(EmptyChunkGenerator::new)));
+	public static final MapCodec<EmptyChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.INT.optionalFieldOf("size", 32).forGetter(chunkGenerator -> chunkGenerator.earthConstraintBlocksCalculator.buildplateWidth), Codec.INT.optionalFieldOf("ground_level", 34).forGetter(chunkGenerator -> chunkGenerator.earthConstraintBlocksCalculator.buildplateGroundLevel), Codec.INT.optionalFieldOf("underground_height", 16).forGetter(chunkGenerator -> chunkGenerator.earthConstraintBlocksCalculator.buildplateUndergroundHeight), Biome.REGISTRY_CODEC.fieldOf("biome").forGetter(chunkGenerator -> chunkGenerator.biome)).apply(instance, instance.stable(EmptyChunkGenerator::new)));
 
 	private final EarthConstraintBlocksCalculator earthConstraintBlocksCalculator;
 	private final RegistryEntry<Biome> biome;
@@ -55,8 +47,7 @@ public class EmptyChunkGenerator extends ChunkGenerator {
 
 	private EmptyChunkGenerator(int size, int groundLevel, int undergroundHeight, @NotNull RegistryEntry<Biome> biome) {
 		super(new FixedBiomeSource(biome));
-		this.earthConstraintBlocksCalculator = new EarthConstraintBlocksCalculator(size, size, groundLevel,
-				undergroundHeight);
+		this.earthConstraintBlocksCalculator = new EarthConstraintBlocksCalculator(size, size, groundLevel, undergroundHeight);
 		this.biome = biome;
 	}
 
@@ -67,15 +58,11 @@ public class EmptyChunkGenerator extends ChunkGenerator {
 
 	@Override
 	public void getDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {
-		text.add("Buildplate size: %d %d %d %d".formatted(this.earthConstraintBlocksCalculator.buildplateWidth,
-				this.earthConstraintBlocksCalculator.buildplateDepth,
-				this.earthConstraintBlocksCalculator.buildplateGroundLevel,
-				this.earthConstraintBlocksCalculator.buildplateUndergroundHeight));
+		text.add("Buildplate size: %d %d %d %d".formatted(this.earthConstraintBlocksCalculator.buildplateWidth, this.earthConstraintBlocksCalculator.buildplateDepth, this.earthConstraintBlocksCalculator.buildplateGroundLevel, this.earthConstraintBlocksCalculator.buildplateUndergroundHeight));
 	}
 
 	@Override
-	public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig,
-			StructureAccessor structureAccessor, Chunk chunk) {
+	public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
 		return CompletableFuture.supplyAsync(() -> {
 			int startX = chunk.getPos().getStartX();
 			int startY = chunk.getBottomY();
@@ -99,8 +86,7 @@ public class EmptyChunkGenerator extends ChunkGenerator {
 	}
 
 	@Override
-	public CompletableFuture<Chunk> populateBiomes(Executor executor, NoiseConfig noiseConfig, Blender blender,
-			StructureAccessor structureAccessor, Chunk chunk) {
+	public CompletableFuture<Chunk> populateBiomes(Executor executor, NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
 		return CompletableFuture.supplyAsync(() -> {
 			chunk.populateBiomes(this.biomeSource, noiseConfig.getMultiNoiseSampler());
 			return chunk;
@@ -118,8 +104,7 @@ public class EmptyChunkGenerator extends ChunkGenerator {
 	}
 
 	@Override
-	public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess,
-			StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
+	public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
 		// empty
 	}
 
@@ -172,14 +157,12 @@ public class EmptyChunkGenerator extends ChunkGenerator {
 	}
 
 	@Override
-	public Pool<SpawnSettings.SpawnEntry> getEntitySpawnList(RegistryEntry<Biome> biome, StructureAccessor accessor,
-			SpawnGroup group, BlockPos pos) {
+	public Pool<SpawnSettings.SpawnEntry> getEntitySpawnList(RegistryEntry<Biome> biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
 		return Pool.empty();
 	}
 
 	@Override
-	public StructurePlacementCalculator createStructurePlacementCalculator(
-			RegistryWrapper<StructureSet> structureSetRegistry, NoiseConfig noiseConfig, long seed) {
+	public StructurePlacementCalculator createStructurePlacementCalculator(RegistryWrapper<StructureSet> structureSetRegistry, NoiseConfig noiseConfig, long seed) {
 		return StructurePlacementCalculator.create(noiseConfig, seed, this.biomeSource, Stream.empty());
 	}
 

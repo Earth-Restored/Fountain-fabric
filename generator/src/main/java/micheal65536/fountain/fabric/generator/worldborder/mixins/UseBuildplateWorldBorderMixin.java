@@ -21,16 +21,13 @@ import micheal65536.fountain.fabric.generator.worldborder.BuildplateWorldBorder;
 import java.util.function.Supplier;
 
 @Mixin(World.class)
-public class UseBuildplateWorldBorderMixin
-{
-	@Shadow
-	@Mutable
+public class UseBuildplateWorldBorderMixin {
+	@Shadow @Mutable
 	private WorldBorder border;
 
 	@Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/world/World;border:Lnet/minecraft/world/border/WorldBorder;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
-	private void overrideWorldBorder(MutableWorldProperties mutableWorldProperties, RegistryKey<World> registryKey, DynamicRegistryManager dynamicRegistryManager, RegistryEntry<DimensionType> registryEntry, Supplier<Profiler> supplier, boolean b1, boolean b2, long l, int i, CallbackInfo callbackInfo)
-	{
-		if (!((World) (Object) this).isClient())    // we only override the world border on the server, this allows the functionality to be properly tested independently of Minecraft Earth
+	private void overrideWorldBorder(MutableWorldProperties mutableWorldProperties, RegistryKey<World> registryKey, DynamicRegistryManager dynamicRegistryManager, RegistryEntry<DimensionType> registryEntry, Supplier<Profiler> supplier, boolean b1, boolean b2, long l, int i, CallbackInfo callbackInfo) {
+		if (!((World) (Object) this).isClient()) // we only override the world border on the server, this allows the functionality to be properly tested independently of Minecraft Earth
 		{
 			this.border = new BuildplateWorldBorder((World) (Object) this);
 		}

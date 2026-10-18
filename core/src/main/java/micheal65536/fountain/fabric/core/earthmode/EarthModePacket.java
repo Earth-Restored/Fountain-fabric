@@ -13,12 +13,9 @@ import micheal65536.fountain.fabric.core.itembehavior.EarthBlockBreakingServerPl
 
 public class EarthModePacket {
 	public record EarthModePayload(boolean earthMode) implements CustomPayload {
-		public static final CustomPayload.Id<EarthModePayload> ID = new CustomPayload.Id<>(
-				Identifier.of("fountain", "earth_mode"));
+		public static final CustomPayload.Id<EarthModePayload> ID = new CustomPayload.Id<>(Identifier.of("fountain", "earth_mode"));
 
-		public static final PacketCodec<RegistryByteBuf, EarthModePayload> CODEC = PacketCodec.tuple(
-				PacketCodecs.BOOL, EarthModePayload::earthMode,
-				EarthModePayload::new);
+		public static final PacketCodec<RegistryByteBuf, EarthModePayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, EarthModePayload::earthMode, EarthModePayload::new);
 
 		@Override
 		public CustomPayload.Id<? extends CustomPayload> getId() {
@@ -42,11 +39,9 @@ public class EarthModePacket {
 		player.sendAbilitiesUpdate();
 
 		if (earthMode) {
-			Main.LOGGER.info(
-					"Enabled Earth mode for %s (requested by channel message)".formatted(player.getName().getString()));
+			Main.LOGGER.info("Enabled Earth mode for %s (requested by channel message)".formatted(player.getName().getString()));
 		} else {
-			Main.LOGGER.info("Disabled Earth mode for %s (requested by channel message)"
-					.formatted(player.getName().getString()));
+			Main.LOGGER.info("Disabled Earth mode for %s (requested by channel message)".formatted(player.getName().getString()));
 		}
 	}
 }
